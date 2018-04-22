@@ -100,11 +100,12 @@ const convertKnnModel = dataArr => {
     }
   );
 };
+app.set('view engine', 'ejs');  
+app.use(express.static('public'));
 app.get("/", (req, res) => {
   const data = getData();
   const knn = convertKnnModel(data);
-  
-  res.sendFile(path.join(__dirname + "/index.html"));
+  res.render('index', { data: data })
 });
 
 app.listen(3000, () => console.log("Example app listening on port 3000!"));

@@ -15,6 +15,7 @@
     "clusters": "0.0.4",
     "csvjson": "^5.0.0",
     "decision-tree": "^0.3.1",
+    "ejs": "^2.5.9",
     "express": "^4.16.3",
     "nearest-neighbor": "0.0.3",
     "nodemon": "^1.12.5"
