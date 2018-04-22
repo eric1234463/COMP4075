@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import DecisionTree from "decision-tree";
 import express from "express";
-import prompt from "prompt";
 import KNN from "ml-knn";
 
 //render app
@@ -12,14 +11,13 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.get("/", (req, res) => {
   const data = getData();
-  const knn = convertKnnModel(data);
   res.render("index", { data: data });
 });
 
 app.get("/result", (req, res) => {
   const inputData = {
-    bedrooms: req.query.bedrooms,
-    accommodates: req.query.accommodates
+    accommodates: req.query.accommodates,
+    bedrooms: req.query.bedrooms
   };
   const price = callDT(inputData);
   const result = {
@@ -27,6 +25,27 @@ app.get("/result", (req, res) => {
   };
   res.render("result", { result: result, inputData: inputData });
 });
+
+app.get("/knn-result", (req, res) => {
+  const inputData = {
+    bedrooms: req.query.bedrooms,
+    accommodates: req.query.accommodates,
+    price: req.query.price
+  };
+  const roomType = predict(inputData);
+
+  const mapping = {
+    0: 'Entire Home/apt',
+    1: 'Private Room',
+    2: 'Shared Room'
+  }
+
+  const result = {
+    room_type: mapping[roomType]
+  };
+  res.render("knn-result", { result: result, inputData: inputData });
+});
+
 app.listen(3000, () => console.log("Example app listening on port 3000!"));
 
 //DT
@@ -61,24 +80,7 @@ const callDT = inputData => {
   return predicted_class;
 };
 
-const convertKnnModel = dataArr => {
-  const modal = dataArr.map(element => {
-    const modalData = {
-      input: {
-        accommodates: element.accommodates,
-        bedrooms: element.bedrooms,
-        minstay: element.minstay
-      },
-      output: {
-        price: element.price
-      }
-    };
-    return modalData;
-  });
-};
-
 //k nearest-neighbor
-
 let knn;
 let seperationSize; // To seperate training and test data
 let X = [],
@@ -92,15 +94,13 @@ let kNN_modal = getData().map(element => ({
   room_type: element.room_type,
   accommodates: parseInt(element.accommodates),
   bedrooms: parseInt(element.bedrooms),
-  minstay: parseInt(element.minstay),
   price: parseInt(element.price)
 }));
 
 seperationSize = 0.7 * kNN_modal.length;
 kNN_modal = shuffleArray(kNN_modal);
-dressData();
 
-function dressData() {
+const dressData = () => {
   let types = new Set();
 
   kNN_modal.forEach(row => {
@@ -119,7 +119,7 @@ function dressData() {
 
     rowArray = Object.keys(row)
       .map(key => parseFloat(row[key]))
-      .slice(1, 5);
+      .slice(1, 4);
 
     typeNumber = typesArray.indexOf(row.room_type); // Convert type(String) to type(Number)
 
@@ -134,12 +134,12 @@ function dressData() {
   testSetY = y.slice(seperationSize);
 
   train();
-}
+};
 
-function train() {
+const train = () => {
   knn = new KNN(trainingSetX, trainingSetY, { k: 7 });
   test();
-}
+};
 
 function test() {
   const result = knn.predict(testSetX);
@@ -148,8 +148,10 @@ function test() {
   console.log(
     `Test Set Size = ${testSetLength} and number of Misclassifications = ${predictionError}`
   );
-  predict();
+  // predict();
 }
+
+dressData();
 
 function error(predicted, expected) {
   let misclassifications = 0;
@@ -161,22 +163,15 @@ function error(predicted, expected) {
   return misclassifications;
 }
 
-function predict() {
+const predict = inputData => {
+  console.log(inputData);
   let temp = [];
-  prompt.start();
-
-  prompt.get(["accommodates", "bedrooms", "minstay", "price"], function(
-    err,
-    result
-  ) {
-    if (!err) {
-      for (var key in result) {
-        temp.push(parseFloat(result[key]));
-      }
-      console.log(`With ${temp} -- room_type =  ${knn.predict(temp)}`);
+    for (var key in inputData) {
+      temp.push(parseInt(inputData[key]));
     }
-  });
-}
+    console.log(`With ${temp} -- room_type =  ${knn.predict(temp)}`);
+    return knn.predict(temp);
+};
 
 function shuffleArray(array) {
   //for random array order

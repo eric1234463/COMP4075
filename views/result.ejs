@@ -13,11 +13,6 @@
 
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/b-1.5.1/r-2.2.1/datatables.min.js"></script>
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $('#myTable').DataTable();
-    });
-  </script>
 </head>
 
 <body>
@@ -31,7 +26,7 @@
         Accommodates:
         <%= inputData.accommodates %>
       </div>
-      <div class="alert alert-primary" role="alert">
+      <div class="alert alert-success" role="alert">
         Expected Price for this room would be $USD
         <%= result.price %>
       </div>
