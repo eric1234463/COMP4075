@@ -18,23 +18,24 @@
   </script>
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Host Ready</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">
+    <img src="icon.png" width="30" height="30" alt=""> Guest Ready
+  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home
+        <a class="nav-link" href="#">Help Airbnb host have better create listing planning
           <span class="sr-only">(current)</span>
         </a>
       </li>
     </ul>
 
-  </div> -->
 </nav>
 
 
@@ -86,24 +87,31 @@
         <table class="table table-dark" id="myTable">
           <thead>
             <tr>
-              <th scope="col">#</th>
-
+              <th scope="col">RoomId</th>
+              <th scope="col">HostId</th>
               <th>Price</th>
               <th>Room Type</th>
               <th>Bedroom</th>
+              <th>Accommodates</th>
             </tr>
           </thead>
           <tbody>
             <% data.forEach((element,index) =>{ %>
               <tr>
                 <td scope="col">
-                  <%= index %>
+                  <%= element.room_id %>
+                </td>
+                <td scope="col">
+                  <%= element.host_id %>
                 </td>
                 <td scope="col">
                   <%= element.price %>
                 </td>
                 <td scope="col">
                   <%= element.room_type %>
+                </td>
+                <td scope="col">
+                  <%= element.accommodates %>
                 </td>
                 <td scope="col">
                   <%= element.bedrooms %>
