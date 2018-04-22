@@ -8,35 +8,69 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
     crossorigin="anonymous"></script>
-</head>
-<table class="table table-dark">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/b-1.5.1/r-2.2.1/datatables.min.css"
+  />
 
-      <th>Price</th>
-      <th>Room Type</th>
-      <th>Bedroom</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% data.forEach((element,index) =>{ %>
-      <tr>
-        <td scope="col">
-          <%= index %>
-        </td>
-        <td scope="col">
-          <%= element.price %>
-        </td>
-        <td scope="col">
-          <%= element.room_type %>
-        </td>
-        <td scope="col">
-          <%= element.bedrooms %>
-        </td>
-      </tr>
-      <% }) %>
-  </tbody>
-</table>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.0.0/dt-1.10.16/b-1.5.1/r-2.2.1/datatables.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#myTable').DataTable();
+    });
+  </script>
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="table table-dark" id="myTable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+
+            <th>Price</th>
+            <th>Room Type</th>
+            <th>Bedroom</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.forEach((element,index) =>{ %>
+            <tr>
+              <td scope="col">
+                <%= index %>
+              </td>
+              <td scope="col">
+                <%= element.price %>
+              </td>
+              <td scope="col">
+                <%= element.room_type %>
+              </td>
+              <td scope="col">
+                <%= element.bedrooms %>
+              </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 </html>
