@@ -1,10 +1,8 @@
 import csvjson from "csvjson";
 import fs from "fs";
 import path from "path";
-import brain from "brain.js";
+import DecisionTree from "decision-tree";
 import nn from "nearest-neighbor";
-
-const net = new brain.NeuralNetwork();
 
 const data = fs.readFileSync(path.join(__dirname, "airbnb.csv"), {
   encoding: "utf8"
@@ -51,7 +49,7 @@ var query = {
   room_type: "Shared room",
   neighborhood: null,
   accommodates: 1,
-  bedrooms: 1,
+  bedrooms: 2,
   minstay: 1,
   price: null
 };
@@ -72,3 +70,29 @@ nn.findMostSimilar(query, kNN_modal, fields, (nearestNeighbor, probability) => {
 });
 
 // console.log(kNN_modal);
+
+const training_data = dataArr.map(element => ({
+  accommodates: parseInt(element.accommodates),
+  bedrooms: parseInt(element.bedrooms),
+  price: parseInt(element.price)
+}));
+
+const features = ["bedrooms", "accommodates"];
+
+const class_name = "price";
+
+const dt = new DecisionTree(training_data, class_name, features);
+
+const predicted_class = dt.predict({
+  bedrooms: 1,
+  accommodates: 2
+});
+
+// const test_data = [
+//   { bedrooms: 1, accommodates: 1, price: 10 },
+//   { bedrooms: 2, accommodates: 2, price: 27 },
+//   { bedrooms: 3, accommodates: 3, price: 41 },
+//   { bedrooms: 4, accommodates: 4, price: 55 }
+// ];
+
+console.log(predicted_class);
