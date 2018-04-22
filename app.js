@@ -3,6 +3,13 @@ import fs from "fs";
 import path from "path";
 import DecisionTree from "decision-tree";
 import nn from "nearest-neighbor";
+import express from 'express';
+
+const app = express()
+
+app.get('/', (req, res) => res.send('Hello World!'))
+
+app.listen(3000, () => console.log('Example app listening on port 3000!'));
 
 const data = fs.readFileSync(path.join(__dirname, "airbnb.csv"), {
   encoding: "utf8"
