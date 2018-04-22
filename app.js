@@ -1,16 +1,36 @@
 import csvjson from "csvjson";
 import fs from "fs";
 import path from "path";
+import brain from 'brain.js';
 
-var data = fs.readFileSync(path.join(__dirname, "airbnb.csv"), {
+const net = new brain.NeuralNetwork();
+
+const data = fs.readFileSync(path.join(__dirname, "airbnb.csv"), {
   encoding: "utf8"
 });
 
-var options = {
+const options = {
   delimiter: ",", // optional
   quote: '"' // optional
 };
 
-const object = csvjson.toObject(data, options);
+const dataArr = csvjson.toObject(data, options);
 
-console.log(object);
+const modal = dataArr.map(element => {
+  const modalData = {
+    input: {
+      accommodates: element.accommodates,
+      bedrooms: element.bedrooms,
+      minstay: element.minstay
+    },
+    output: {
+      price: element.price
+    }
+  }
+  return modalData;
+});
+
+console.log(modal);
+net.train(modal);
+var output = net.run({ accommodates: 1, bedrooms: 1, minstay: 1 });
+console.log(output);
