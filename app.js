@@ -35,10 +35,10 @@ app.get("/knn-result", (req, res) => {
   const roomType = predict(inputData);
 
   const mapping = {
-    0: 'Entire Home/apt',
-    1: 'Private Room',
-    2: 'Shared Room'
-  }
+    0: "Entire Home/apt",
+    1: "Private Room",
+    2: "Shared Room"
+  };
 
   const result = {
     room_type: mapping[roomType]
@@ -66,10 +66,21 @@ const getData = () => {
 };
 
 const callDT = inputData => {
+
+  const mapping = price => {
+    if (price >= 1 && price <= 50) {
+      return '1-50'
+    } else if (price >= 51 && price <= 150) {
+      return '51-150'
+    } else {
+      return '>150'
+    }
+  }
+
   const training_data = getData().map(element => ({
     accommodates: parseInt(element.accommodates),
     bedrooms: parseInt(element.bedrooms),
-    price: parseInt(element.price)
+    price: mapping(element.price)
   }));
 
   const features = ["bedrooms", "accommodates"];
@@ -79,7 +90,39 @@ const callDT = inputData => {
   const dt = new DecisionTree(training_data, class_name, features);
 
   const predicted_class = dt.predict(inputData);
+
+  evaluation(training_data);
   return predicted_class;
+};
+
+const evaluation = training_data => {
+  const seperationSize = 0.7 * training_data.length;
+
+  let trainingSet = [],
+    testingSet = [];
+
+  trainingSet = training_data.slice(0, seperationSize);
+  testingSet = training_data.slice(seperationSize);
+
+  const features = ["bedrooms", "accommodates"];
+  const class_name = "price";
+
+  const dt = new DecisionTree(trainingSet, class_name, features);
+
+  let misclassifications = 0;
+  for (var index = 0; index < testingSet.length; index++) {
+    let input = {
+      accommodates: testingSet[index].accommodates,
+      bedrooms: testingSet[index].bedrooms
+    };
+    let res = dt.predict(input);
+
+    if (res !== testingSet[index].price) {
+      misclassifications++;
+    }
+  }
+  console.log('size:', index);
+  console.log('DT:', misclassifications);
 };
 
 //k nearest-neighbor
@@ -139,7 +182,7 @@ const dressData = () => {
 };
 
 const train = () => {
-  knn = new KNN(trainingSetX, trainingSetY, { k: 7 });
+  knn = new KNN(trainingSetX, trainingSetY, { k: 92 });
   test();
 };
 
@@ -168,11 +211,11 @@ function error(predicted, expected) {
 const predict = inputData => {
   console.log(inputData);
   let temp = [];
-    for (var key in inputData) {
-      temp.push(parseInt(inputData[key]));
-    }
-    console.log(`With ${temp} -- room_type =  ${knn.predict(temp)}`);
-    return knn.predict(temp);
+  for (var key in inputData) {
+    temp.push(parseInt(inputData[key]));
+  }
+  console.log(`With ${temp} -- room_type =  ${knn.predict(temp)}`);
+  return knn.predict(temp);
 };
 
 function shuffleArray(array) {
