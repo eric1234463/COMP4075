@@ -91,7 +91,8 @@ const callDT = inputData => {
 
   const predicted_class = dt.predict(inputData);
 
-  evaluation(training_data);
+  //increase performance
+  // evaluation(training_data);
   return predicted_class;
 };
 
