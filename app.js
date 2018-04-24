@@ -65,34 +65,53 @@ const getData = () => {
   return dataArr;
 };
 
-const callDT = inputData => {
-
-  const mapping = price => {
-    if (price >= 1 && price <= 50) {
-      return '1-50'
-    } else if (price >= 51 && price <= 150) {
-      return '51-150'
-    } else {
-      return '>150'
-    }
+const mapping = price => {
+  if (price >= 1 && price <= 25) {
+    return '1-25'
+  } else if (price >= 26 && price <= 50) {
+    return '26-50'
+  } else if (price >= 50 && price <= 100) {
+    return '50-100'
+  } else if (price >= 101 && price <= 150) {
+    return '101-150'
+  } else {
+    return '>150'
   }
+}
 
-  const training_data = getData().map(element => ({
-    accommodates: parseInt(element.accommodates),
-    bedrooms: parseInt(element.bedrooms),
-    price: mapping(element.price)
-  }));
+const mapping2 = price => {
+  if (price >= 0 && price <= 100) {
+    return '1-100'
+  } else if (price >= 101 && price <= 200) {
+    return '101-200'
+  } else if (price >= 201 && price <= 300) {
+    return '200-300'
+  } else {
+    return '> 300'
+  }
+}
+
+let training_data = getData().map(element => ({
+  accommodates: parseInt(element.accommodates),
+  bedrooms: parseInt(element.bedrooms),
+  neighborhood: element.neighborhood,
+  minstay: element.minstay,
+  price: mapping2(element.price)
+}));
+
+const callDT = inputData => {
 
   const features = ["bedrooms", "accommodates"];
 
   const class_name = "price";
+
+  training_data = shuffleArray(training_data);
 
   const dt = new DecisionTree(training_data, class_name, features);
 
   const predicted_class = dt.predict(inputData);
 
   //increase performance
-  // evaluation(training_data);
   return predicted_class;
 };
 
@@ -105,7 +124,7 @@ const evaluation = training_data => {
   trainingSet = training_data.slice(0, seperationSize);
   testingSet = training_data.slice(seperationSize);
 
-  const features = ["bedrooms", "accommodates"];
+  const features = ["bedrooms", "accommodates", "neighborhood"];
   const class_name = "price";
 
   const dt = new DecisionTree(trainingSet, class_name, features);
@@ -113,18 +132,24 @@ const evaluation = training_data => {
   let misclassifications = 0;
   for (var index = 0; index < testingSet.length; index++) {
     let input = {
-      accommodates: testingSet[index].accommodates,
-      bedrooms: testingSet[index].bedrooms
+      accommodates: parseInt(testingSet[index].accommodates),
+      bedrooms: parseInt(testingSet[index].bedrooms),
+      neighborhood: testingSet[index].neighborhood
     };
     let res = dt.predict(input);
 
     if (res !== testingSet[index].price) {
+      console.log(res, testingSet[index].price);
       misclassifications++;
     }
   }
-  console.log('size:', index);
-  console.log('DT:', misclassifications);
+
+  var accuracy = dt.evaluate(testingSet);
+  console.log(accuracy);
+  console.log('error:', misclassifications/ index);
 };
+
+evaluation(shuffleArray(training_data));
 
 //k nearest-neighbor
 let knn;
