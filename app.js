@@ -87,7 +87,7 @@ let training_data = getData().map(element => ({
 
 const callDT = inputData => {
 
-  const features = ["bedrooms", "accommodates"];
+  const features = ["bedrooms", "accommodates", "neighborhood"];
 
   const class_name = "price";
 
