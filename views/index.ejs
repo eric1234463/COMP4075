@@ -47,12 +47,16 @@
           <h5 class="card-title">Decision Tree</h5>
           <div class="form-group">
             <label for="bedrooms">Bedrooms</label>
-            <input type="text" class="form-control" name="bedrooms" placeholder="Enter Bedroom">
+            <input type="text" class="form-control" name="bedrooms" placeholder="Enter no. of Bedroom">
           </div>
 
           <div class="form-group">
-            <label for="bedrooms">Accommodates</label>
+            <label for="accommodates">Accommodates</label>
             <input type="text" class="form-control" name="accommodates" placeholder="Enter Accommodates">
+          </div>
+          <div class="form-group">
+            <label for="neighborhood">Location</label>
+            <input type="text" class="form-control" name="neighborhood" placeholder="Enter Location">
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -64,7 +68,7 @@
           <h5 class="card-title">K-nearest Neighbors (KNN) Algorithm</h5>
           <div class="form-group">
             <label for="bedrooms">Bedrooms</label>
-            <input type="text" class="form-control" name="bedrooms" placeholder="Enter Bedroom">
+            <input type="text" class="form-control" name="bedrooms" placeholder="Enter no. of Bedroom">
           </div>
 
           <div class="form-group">
@@ -88,7 +92,7 @@
           <thead>
             <tr>
               <th scope="col">RoomId</th>
-              <th scope="col">HostId</th>
+              <th scope="col">Location</th>
               <th>Price</th>
               <th>Room Type</th>
               <th>Bedroom</th>
@@ -102,7 +106,7 @@
                   <%= element.room_id %>
                 </td>
                 <td scope="col">
-                  <%= element.host_id %>
+                  <%= element.neighborhood %>
                 </td>
                 <td scope="col">
                   <%= element.price %>

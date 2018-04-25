@@ -17,7 +17,8 @@ app.get("/", (req, res) => {
 app.get("/result", (req, res) => {
   const inputData = {
     accommodates: req.query.accommodates,
-    bedrooms: req.query.bedrooms
+    bedrooms: req.query.bedrooms,
+    neighborhood: req.query.neighborhood
   };
   const price = callDT(inputData);
   const result = {
@@ -66,20 +67,6 @@ const getData = () => {
 };
 
 const mapping = price => {
-  if (price >= 1 && price <= 25) {
-    return '1-25'
-  } else if (price >= 26 && price <= 50) {
-    return '26-50'
-  } else if (price >= 50 && price <= 100) {
-    return '50-100'
-  } else if (price >= 101 && price <= 150) {
-    return '101-150'
-  } else {
-    return '>150'
-  }
-}
-
-const mapping2 = price => {
   if (price >= 0 && price <= 100) {
     return '1-100'
   } else if (price >= 101 && price <= 200) {
@@ -95,8 +82,7 @@ let training_data = getData().map(element => ({
   accommodates: parseInt(element.accommodates),
   bedrooms: parseInt(element.bedrooms),
   neighborhood: element.neighborhood,
-  minstay: element.minstay,
-  price: mapping2(element.price)
+  price: mapping(element.price)
 }));
 
 const callDT = inputData => {
@@ -111,7 +97,6 @@ const callDT = inputData => {
 
   const predicted_class = dt.predict(inputData);
 
-  //increase performance
   return predicted_class;
 };
 
@@ -148,8 +133,7 @@ const evaluation = training_data => {
   console.log(accuracy);
   console.log('error:', misclassifications/ index);
 };
-
-evaluation(shuffleArray(training_data));
+// evaluation(shuffleArray(training_data));
 
 //k nearest-neighbor
 let knn;
@@ -180,11 +164,6 @@ const dressData = () => {
 
   let typesArray = [...types];
 
-  // typesArray:
-  // entire home = 0
-  // private room = 1
-  // shared room = 2
-
   kNN_modal.forEach(row => {
     let rowArray, typeNumber;
 
@@ -209,7 +188,7 @@ const dressData = () => {
 
 const train = () => {
   knn = new KNN(trainingSetX, trainingSetY, { k: 92 });
-  test();
+  // test();
 };
 
 function test() {
